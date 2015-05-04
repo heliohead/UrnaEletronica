@@ -1,7 +1,9 @@
 
 package dao;
 
+import classes.Candidato;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class EleicaoDAO {
@@ -21,5 +23,27 @@ public class EleicaoDAO {
         return resp;
     }
      
-    
+    public Candidato getEleitor(){
+        try{
+          Connection con = Conecta.getConexao();
+          Statement stmt = con.createStatement(); 
+          String sql = "SELECT * FROM eleicao";
+          ResultSet rs = stmt.executeQuery(sql);
+          if(rs.next()){
+            eleitor.setNome(rs.getString("nome"));
+            eleitor.setTitulo(rs.getString("titulo"));
+            //eleitor.setVotou(rs.getBoolean("votou"));
+          }else{
+            eleitor = null;
+          }
+          
+          rs.close();
+          stmt.close();
+          con.close();
+        }catch(Exception e){
+            eleitor = null;
+        }        
+        return eleitor;
+        
+    }
 }
